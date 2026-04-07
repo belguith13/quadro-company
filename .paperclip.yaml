@@ -1,0 +1,185 @@
+schema: paperclip/v1
+
+agents:
+  ceo:
+    adapter:
+      type: claude_local
+      config:
+        model: claude-opus-4-6
+    inputs:
+      env:
+        ANTHROPIC_API_KEY:
+          kind: secret
+          requirement: required
+          description: "API key for Claude AI — used by all claude_local agents"
+    budget:
+      monthlyCents: 150000  # $1,500/month
+    permissions:
+      canCreateAgents: false
+      canManageProjects: true
+      canManageTasks: true
+
+  cto:
+    adapter:
+      type: claude_local
+      config:
+        model: claude-opus-4-6
+    inputs:
+      env:
+        ANTHROPIC_API_KEY:
+          kind: secret
+          requirement: required
+        GITHUB_TOKEN:
+          kind: secret
+          requirement: optional
+          description: "GitHub token for repo access (code review, PR management)"
+    budget:
+      monthlyCents: 100000  # $1,000/month
+    permissions:
+      canCreateAgents: false
+      canManageProjects: true
+      canManageTasks: true
+
+  product-manager:
+    adapter:
+      type: claude_local
+      config:
+        model: claude-sonnet-4-6
+    inputs:
+      env:
+        ANTHROPIC_API_KEY:
+          kind: secret
+          requirement: required
+    budget:
+      monthlyCents: 50000  # $500/month
+    permissions:
+      canCreateAgents: false
+      canManageProjects: false
+      canManageTasks: true
+
+  engineer:
+    adapter:
+      type: claude_local
+      config:
+        model: claude-opus-4-6
+    inputs:
+      env:
+        ANTHROPIC_API_KEY:
+          kind: secret
+          requirement: required
+        GITHUB_TOKEN:
+          kind: secret
+          requirement: optional
+          description: "GitHub token for opening PRs and reviewing code"
+    budget:
+      monthlyCents: 200000  # $2,000/month (highest — does the most coding work)
+    permissions:
+      canCreateAgents: false
+      canManageProjects: false
+      canManageTasks: true
+
+  growth-marketer:
+    adapter:
+      type: claude_local
+      config:
+        model: claude-sonnet-4-6
+    inputs:
+      env:
+        ANTHROPIC_API_KEY:
+          kind: secret
+          requirement: required
+    budget:
+      monthlyCents: 50000  # $500/month
+    permissions:
+      canCreateAgents: false
+      canManageProjects: false
+      canManageTasks: true
+
+  sales-rep:
+    adapter:
+      type: claude_local
+      config:
+        model: claude-sonnet-4-6
+    inputs:
+      env:
+        ANTHROPIC_API_KEY:
+          kind: secret
+          requirement: required
+        LINEAR_API_KEY:
+          kind: secret
+          requirement: optional
+          description: "Linear API for tracking sales pipeline issues"
+    budget:
+      monthlyCents: 50000  # $500/month
+    permissions:
+      canCreateAgents: false
+      canManageProjects: false
+      canManageTasks: true
+
+  customer-success:
+    adapter:
+      type: claude_local
+      config:
+        model: claude-sonnet-4-6
+    inputs:
+      env:
+        ANTHROPIC_API_KEY:
+          kind: secret
+          requirement: required
+    budget:
+      monthlyCents: 50000  # $500/month
+    permissions:
+      canCreateAgents: false
+      canManageProjects: false
+      canManageTasks: true
+
+routines:
+  weekly-exec-review:
+    concurrencyPolicy: Forbid
+    catchUpPolicy: Skip
+    triggers:
+      - kind: schedule
+        cronExpression: "0 9 * * 1"  # Monday 9am CET
+        timezone: Europe/Paris
+        enabled: true
+    assignee: ceo
+
+  sales-heartbeat:
+    concurrencyPolicy: Forbid
+    catchUpPolicy: Skip
+    triggers:
+      - kind: schedule
+        cronExpression: "0 8 * * 1"  # Monday 8am CET (before CEO)
+        timezone: Europe/Paris
+        enabled: true
+    assignee: sales-rep
+
+  marketing-heartbeat:
+    concurrencyPolicy: Forbid
+    catchUpPolicy: Skip
+    triggers:
+      - kind: schedule
+        cronExpression: "0 9 * * 2"  # Tuesday 9am CET
+        timezone: Europe/Paris
+        enabled: true
+    assignee: growth-marketer
+
+  cs-heartbeat:
+    concurrencyPolicy: Forbid
+    catchUpPolicy: Skip
+    triggers:
+      - kind: schedule
+        cronExpression: "0 9 * * 3"  # Wednesday 9am CET
+        timezone: Europe/Paris
+        enabled: true
+    assignee: customer-success
+
+  cto-heartbeat:
+    concurrencyPolicy: Forbid
+    catchUpPolicy: Skip
+    triggers:
+      - kind: schedule
+        cronExpression: "0 9 * * 1"  # Monday 9am CET (same as CEO, parallel)
+        timezone: Europe/Paris
+        enabled: true
+    assignee: cto
