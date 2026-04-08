@@ -183,3 +183,63 @@ routines:
         timezone: Europe/Paris
         enabled: true
     assignee: cto
+
+  pm-heartbeat:
+    concurrencyPolicy: Forbid
+    catchUpPolicy: Skip
+    triggers:
+      - kind: schedule
+        cronExpression: "0 9 * * 1"  # Monday 9am CET
+        timezone: Europe/Paris
+        enabled: true
+    assignee: product-manager
+
+  friday-board-memo:
+    concurrencyPolicy: Forbid
+    catchUpPolicy: Skip
+    triggers:
+      - kind: schedule
+        cronExpression: "0 16 * * 5"  # Friday 4pm CET
+        timezone: Europe/Paris
+        enabled: true
+    assignee: ceo
+
+  friday-agent-reports:
+    concurrencyPolicy: Allow
+    catchUpPolicy: Skip
+    triggers:
+      - kind: schedule
+        cronExpression: "0 16 * * 5"  # Friday 4pm CET (parallel with CEO memo)
+        timezone: Europe/Paris
+        enabled: true
+    assignee: cto
+
+  friday-sales-report:
+    concurrencyPolicy: Allow
+    catchUpPolicy: Skip
+    triggers:
+      - kind: schedule
+        cronExpression: "0 16 * * 5"  # Friday 4pm CET
+        timezone: Europe/Paris
+        enabled: true
+    assignee: sales-rep
+
+  friday-marketing-report:
+    concurrencyPolicy: Allow
+    catchUpPolicy: Skip
+    triggers:
+      - kind: schedule
+        cronExpression: "0 16 * * 5"  # Friday 4pm CET
+        timezone: Europe/Paris
+        enabled: true
+    assignee: growth-marketer
+
+  friday-cs-report:
+    concurrencyPolicy: Allow
+    catchUpPolicy: Skip
+    triggers:
+      - kind: schedule
+        cronExpression: "0 16 * * 5"  # Friday 4pm CET
+        timezone: Europe/Paris
+        enabled: true
+    assignee: customer-success

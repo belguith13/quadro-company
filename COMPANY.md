@@ -28,6 +28,7 @@ includes:
   - skills/kitchen-domain/SKILL.md
   - skills/outreach/SKILL.md
   - skills/engineering/SKILL.md
+  - skills/weekly-reporting/SKILL.md
 requirements:
   secrets:
     - ANTHROPIC_API_KEY
